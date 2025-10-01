@@ -43,3 +43,28 @@ vector<pair<int, double>> VectorDB::findNearest(const vector<float>& query_vec, 
 
     return similarities;
 }
+
+double VectorDB::cosineSimilarity(const vector<float>& a, const vector<float>& b) {
+    if (a.size() != b.size() || a.empty()) {
+        throw invalid_argument("vectors must have same non zero dimensions");
+    }
+    double dot_product = 0.0;
+    double norm_a = 0.0;
+    double norm_b = 0.0;
+
+    for (size_t i = 0; i < a.size(); i++)
+    {
+        dot_product += a[i] * b[i];
+
+        norm_a += a[i] * a[i];
+        norm_b += b[i] * b[i];
+    }
+
+    double magnitude = sqrt(norm_a) * sqrt(norm_b);
+
+    if (magnitude == 0) {
+        return 0.0;
+    }
+
+    return dot_product / magnitude;
+}
