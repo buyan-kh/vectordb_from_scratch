@@ -5,35 +5,35 @@
 #include <stdexcept>
 #include <iostream>
 
-bool VectorDB::addVector(int id, const vector<float>& vec) {
-    if (storage.find(id) != storage.end()) {
-        cerr << "error: vector with id " << id << "already exists" << endl;
+bool VectorDB::addVector(int id, const std::vector<float>& vec) {
+    if (db.find(id) != db.end()) {
+        std::cerr << "error: vector with id " << id << " already exists" << std::endl;
         return false;
     }
-    storage[id] = vec;
+    db[id] = vec;
     return true;
 }
 
-vector<pair<int, double>> VectorDB::findNearest(const vector<float>& query_vec, int k) {
+std::vector<std::pair<int, double>> VectorDB::findNearest(const std::vector<float>& query_vec, int k) {
 
-    if (storage.empty()) {
-        cerr << "database is empty cant find nearest neighbors" << endl;
+    if (db.empty()) {
+        std::cerr << "database is empty can't find nearest neighbors" << std::endl;
         return {};
     }
 
     if (k <= 0) {
-        cerr << "error: k must be positive" << endl;
+        std::cerr << "error: k must be positive" << std::endl;
         return {};
     }
 
-    vector<pair<int, double>> similarities;
+    std::vector<std::pair<int, double>> similarities;
 
-    for (const auto& pair : storage) {
+    for (const auto& pair : db) {
         double sim = cosineSimilarity(query_vec, pair.second);
         similarities.push_back({pair.first, sim});
     }
 
-    sort(similarities.begin(), similarities.end(), [](const auto& a, const auto& b) {
+    sort(similarities.begin(), similarities.end(), [](const std::pair<int, double>& a, const std::pair<int, double>& b) {
         return a.second > b.second;
     });
 
@@ -44,9 +44,9 @@ vector<pair<int, double>> VectorDB::findNearest(const vector<float>& query_vec, 
     return similarities;
 }
 
-double VectorDB::cosineSimilarity(const vector<float>& a, const vector<float>& b) {
+double VectorDB::cosineSimilarity(const std::vector<float>& a, const std::vector<float>& b) {
     if (a.size() != b.size() || a.empty()) {
-        throw invalid_argument("vectors must have same non zero dimensions");
+        throw std::invalid_argument("vectors must have same non zero dimensions");
     }
     double dot_product = 0.0;
     double norm_a = 0.0;

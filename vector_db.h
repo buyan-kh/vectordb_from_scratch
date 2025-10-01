@@ -1,14 +1,13 @@
 #include <vector>
 #include <map>
 #include <utility>
-using namespace std;
 
 class VectorDB {
 public:
-    bool addVector(int id, const vector<float>& vec);
-    vector<pair<int, double>> findNearest(const vector<float>& query_vec, int k);
+    bool addVector(int id, const std::vector<float>& vec);
+    std::vector<std::pair<int, double>> findNearest(const std::vector<float>& query_vec, int k);
 private:
-    map<int, vector<float>> db;
-    double cosineSimilarity(const vector<float>& a, const vector<float>& b);
+    std::map<int, std::vector<float>> db;
+    double cosineSimilarity(const std::vector<float>& a, const std::vector<float>& b);
 };
 
