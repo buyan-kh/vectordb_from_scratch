@@ -90,3 +90,33 @@ bool VectorDB::saveToFile(const std::string& filename) {
     std::cout << "database saved to " << filename << std::endl;
     return true;
 }
+
+bool VectorDB::loadFromFile(const std::string& filename) {
+    std::ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "error: couldn't open file for reading: " << filename << std::endl;
+        return false;
+    }
+
+    db.clear();
+    std::string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        int id;
+        size_t dimension;
+        ss >> id >> dimension;
+        std::vector<float> vec(dimension);
+
+        for (size_t i = 0; i < dimension; i++)
+        {
+            ss >> vec[i];
+        }
+
+        db[id] = vec;
+    }
+
+    inFile.close();
+    std::cout << "database loaded from " << filename << std::endl;
+    return true;
+
+}
