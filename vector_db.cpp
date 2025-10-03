@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 bool VectorDB::addVector(int id, const std::vector<float>& vec) {
     if (db.find(id) != db.end()) {
@@ -55,7 +57,6 @@ double VectorDB::cosineSimilarity(const std::vector<float>& a, const std::vector
     for (size_t i = 0; i < a.size(); i++)
     {
         dot_product += a[i] * b[i];
-
         norm_a += a[i] * a[i];
         norm_b += b[i] * b[i];
     }
@@ -67,4 +68,25 @@ double VectorDB::cosineSimilarity(const std::vector<float>& a, const std::vector
     }
 
     return dot_product / magnitude;
+}
+
+bool VectorDB::saveToFile(const std::string& filename) {
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        std::cerr << "error: couldn't open file for writing: " << filename << std::endl;
+        return false;
+    }
+
+    for (const auto& pair : db) {
+        int id = pair.first;
+        const std::vector<float>& vec = pair.second;
+        outFile << id << " " << vec.size();
+        for (float val : vec) {
+            outFile << " " << val;
+        }
+        outFile << std::endl;
+    }
+    outFile.close();
+    std::cout << "database saved to " << filename << std::endl;
+    return true;
 }
