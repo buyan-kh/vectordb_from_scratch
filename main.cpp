@@ -11,6 +11,30 @@ void printVector(const std::vector<float>& vec) {
     cout << "]" << endl;
 }
 
+void run_query(VectorDB& db) {
+    std::vector<float> query_vector = {0.8, 0.2, 0.05};
+    std::cout << "searching vectors similar to: ";
+    printVector(query_vector);
+
+    int k = 2;
+    std::vector<std::pair<int, double>> nearest_neighbors = db.findNearest(query_vector, k);
+
+    std::cout << "---search results ---\n";
+
+    if (nearest_neighbors.empty())
+    {
+        cout << "no neighbors found. " << std:endl;
+    } else {
+        for (const auto& neighbor : nearest_neighbors) 
+        {
+            std::cout << " - Vector ID: " << neighbor.first
+            << ", Similarity Score: " << neighbor.second << endl;
+        }
+    }
+    std::cout << "-----------------\n";
+}
+
+
 int main() {
     cout << "initializing vector database...\n";
     VectorDB db;
