@@ -23,7 +23,7 @@ void run_query(VectorDB& db) {
 
     if (nearest_neighbors.empty())
     {
-        cout << "no neighbors found. " << std:endl;
+        cout << "no neighbors found. " << std::endl;
     } else {
         for (const auto& neighbor : nearest_neighbors) 
         {
